@@ -381,7 +381,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchCurrentLocation = async () => {
       try {
-        const response = await fetch("http://ip-api.com/json/");
+        const response = await fetch("http://ip-api.com/json/", {
+          referrerPolicy: "unsafe-url",
+        });
         const data: IPLocationResponse = await response.json();
         if (data.status === "success" && data.country && data.countryCode) {
           // Convert alpha-2 to alpha-3 country code
