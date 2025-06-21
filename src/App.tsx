@@ -42,9 +42,8 @@ interface CurrentLocation {
 }
 
 interface IPLocationResponse {
-  status: string;
   country: string;
-  countryCode: string;
+  country_name: string;
   city: string;
 }
 
@@ -381,22 +380,20 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchCurrentLocation = async () => {
       try {
-        const response = await fetch("http://ip-api.com/json/", {
-          referrerPolicy: "unsafe-url",
-        });
+        const response = await fetch("https://ipapi.co/json/");
         const data: IPLocationResponse = await response.json();
-        if (data.status === "success" && data.country && data.countryCode) {
+        if (data.country_name && data.country) {
           // Convert alpha-2 to alpha-3 country code
           const countryData = (
             iso3Data as { "alpha-2": string; "alpha-3": string; name: string }[]
           ).find(
             (c) =>
-              c["alpha-2"].toLowerCase() === data.countryCode.toLowerCase(),
+              c["alpha-2"].toLowerCase() === data.country.toLowerCase(),
           );
 
           if (countryData) {
             setCurrentLocation({
-              country: data.country,
+              country: data.country_name,
               countryCode: countryData["alpha-3"],
               city: data.city,
             });
