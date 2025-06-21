@@ -387,8 +387,7 @@ const App: React.FC = () => {
           const countryData = (
             iso3Data as { "alpha-2": string; "alpha-3": string; name: string }[]
           ).find(
-            (c) =>
-              c["alpha-2"].toLowerCase() === data.country.toLowerCase(),
+            (c) => c["alpha-2"].toLowerCase() === data.country.toLowerCase(),
           );
 
           if (countryData) {
@@ -878,9 +877,9 @@ const App: React.FC = () => {
   const getMapSize = useMemo(() => {
     const width = window.innerWidth;
     if (width <= 480) {
-      return { width: 250, height: 250 };
+      return { width: 350, height: 350 };
     } else if (width <= 768) {
-      return { width: 300, height: 300 };
+      return { width: 400, height: 400 };
     } else {
       return { width: 685, height: 565 };
     }
