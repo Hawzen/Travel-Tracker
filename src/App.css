@@ -1,3 +1,7 @@
+html {
+    zoom: 0.75; /* 75 % of normal size */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -24,6 +28,11 @@ body {
     background: #f8fafc;
     color: #1f2937;
     line-height: 1.5;
+
+    width: min(100%, 1300px);
+    height: min(100%, 1500px);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .app {
@@ -45,16 +54,15 @@ body {
 
 .flying-particle {
     position: absolute;
-    font-size: 24px;
-    animation: flyAcrossScreen 3s ease-out forwards;
+    font-size: 34px;
+    animation: flyAcrossScreen 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+        forwards;
     pointer-events: none;
     user-select: none;
-}
-
-.flying-particle {
-    font-size: 24px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
     will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
 }
 
 @keyframes flyAcrossScreen {
@@ -62,33 +70,7 @@ body {
         opacity: 1;
         transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
     }
-    25% {
-        opacity: 1;
-        transform: translate3d(
-                calc(var(--vx) * 25px),
-                calc(var(--vy) * 25px),
-                0
-            )
-            rotate(120deg) scale(1.1);
-    }
-    50% {
-        opacity: 0.8;
-        transform: translate3d(
-                calc(var(--vx) * 50px),
-                calc(var(--vy) * 50px + 120px),
-                0
-            )
-            rotate(240deg) scale(1);
-    }
-    75% {
-        opacity: 0.3;
-        transform: translate3d(
-                calc(var(--vx) * 75px),
-                calc(var(--vy) * 75px + 220px),
-                0
-            )
-            rotate(300deg) scale(0.7);
-    }
+
     100% {
         opacity: 0;
         transform: translate3d(
@@ -101,21 +83,21 @@ body {
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 20px;
 }
 
 .input-section {
     background: white;
     border-radius: 20px;
-    padding: 32px;
+    padding: 28px 32px;
     box-shadow:
-        0 1px 3px rgba(0, 0, 0, 0.1),
-        0 1px 2px rgba(0, 0, 0, 0.06);
-    border: 1px solid #f3f4f6;
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
 }
 
 .input-row {
@@ -272,7 +254,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 8px;
+    padding-right: 16px;
     background: #f9fafb;
     border-radius: 12px;
     border: 2px solid #e5e7eb;
@@ -305,7 +287,7 @@ body {
 }
 
 .heart-button:hover {
-    transform: scale(1.1);
+    transform: scale(1.5);
 }
 
 .heart-button.animating {
@@ -367,34 +349,35 @@ body {
 
 .main-layout {
     display: flex;
-    gap: 0px;
+    gap: 24px;
     align-items: flex-start;
+    min-height: 70vh;
 }
 
 .globe-section {
-    flex: 3;
+    flex: 2.2;
     background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 50vh;
-    padding: 20px;
-    bottom: 0;
+    min-height: 70vh;
+    padding: 0;
 }
 
 .map-container {
     width: 100%;
-    height: 100%;
+    height: 70vh;
     display: flex;
     justify-content: center;
     align-items: center;
     background: #ffffff !important;
     overflow: visible;
     position: relative;
-    border-radius: 50%;
+    border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     animation: zoomFadeIn 0.9s ease both;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 100%;
 }
 
 .map-container > div,
@@ -406,20 +389,24 @@ body {
     justify-content: center !important;
     align-items: center !important;
     background: #ffffff !important;
-}
 
-.map-container .plotly {
     border-radius: 20px;
-    padding: 24px;
     box-shadow:
         0 4px 6px -1px rgba(0, 0, 0, 0.1),
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
     border: 1px solid #e5e7eb;
-    max-height: 70vh;
-    overflow-y: auto;
-    position: sticky;
-    top: 5em;
-    min-width: 320px;
+}
+
+.map-container .plotly {
+    border-radius: 20px;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    max-height: none;
+    overflow: visible;
+    position: static;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .map-loading {
@@ -431,23 +418,25 @@ body {
     justify-content: center;
     background: #ffffff;
     width: 100%;
-    border-radius: 50%;
+    border-radius: 20px;
 }
 
 .countries-sidebar {
-    flex: 1;
     background: white;
     border-radius: 20px;
-    padding: 24px;
+    padding: 16px;
     box-shadow:
         0 4px 6px -1px rgba(0, 0, 0, 0.1),
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
     border: 1px solid #e5e7eb;
     overflow: hidden;
     position: sticky;
-    top: 20px;
+    top: auto;
     display: flex;
     flex-direction: column;
+    height: fit-content;
+    max-height: 70vh;
+    min-width: 40%;
 }
 
 .sidebar-title {
@@ -511,13 +500,14 @@ body {
 .countries-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     overflow-y: auto;
-    padding: 8px 16px 8px 8px;
-    margin-right: -16px;
-    max-height: 350px;
+    padding: 12px 20px 12px 12px;
+    margin-right: -20px;
+    max-height: 50vh;
     position: relative;
     scroll-behavior: smooth;
+    flex: 1;
 }
 
 .countries-list::-webkit-scrollbar {
@@ -533,26 +523,356 @@ body {
     border-radius: 10px;
 }
 
-.countries-list::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
     background: #9ca3af;
 }
 
-.countries-list::before {
-    content: "";
-    position: sticky;
-    top: -8px;
-    left: 0;
-    right: 0;
-    height: 16px;
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 1) 0%,
-        rgba(255, 255, 255, 0.8) 50%,
-        rgba(255, 255, 255, 0) 100%
-    );
-    z-index: 10;
-    pointer-events: none;
-    margin-bottom: -8px;
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .app {
+        padding: 16px;
+    }
+
+    .fancy-title-container {
+        margin-bottom: 30px;
+    }
+
+    .fancy-title {
+        font-size: clamp(2rem, 6vw, 3rem);
+        padding: 15px 0;
+    }
+
+    .sparkle-1 {
+        left: -40px;
+        top: -5px;
+    }
+
+    .sparkle-2 {
+        right: -40px;
+        top: -5px;
+    }
+
+    .container {
+        gap: 16px;
+    }
+
+    .main-layout {
+        flex-direction: column;
+        gap: 20px;
+        min-height: auto;
+        width: 100%;
+    }
+
+    .globe-section {
+        min-height: auto;
+        width: 100%;
+        padding: 0;
+    }
+
+    .map-container {
+        width: 100%;
+        height: 50vh;
+        border-radius: 20px;
+    }
+
+    .countries-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 120vh;
+        position: static;
+        padding: 24px;
+        border-radius: 20px;
+    }
+
+    .sidebar-title {
+        font-size: 18px;
+        margin-bottom: 16px;
+    }
+
+    .buttons-section {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+
+    .play-button,
+    .export-button {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 12px;
+        border-radius: 12px;
+    }
+
+    .countries-list {
+        max-height: 30vh;
+        gap: 8px;
+        padding: 8px 16px 8px 8px;
+        margin-right: -16px;
+    }
+
+    .country-card {
+        padding: 8px;
+        border-radius: 8px;
+        gap: 8px;
+    }
+
+    .country-flag {
+        width: 20px;
+        height: 15px;
+    }
+
+    .visit-country {
+        font-size: 12px;
+    }
+
+    .visit-date {
+        font-size: 10px;
+    }
+
+    .remove-button {
+        width: 24px;
+        height: 24px;
+        font-size: 14px;
+        padding: 4px;
+    }
+
+    .current-location-card {
+        padding: 12px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+    }
+
+    .location-header {
+        font-size: 10px;
+        margin-bottom: 6px;
+    }
+
+    .input-section {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .input-row {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto;
+        gap: 12px;
+    }
+
+    .country-select .select__control,
+    .date-input {
+        min-height: 44px;
+        font-size: 14px;
+        border-radius: 12px;
+        padding: 8px 12px;
+    }
+
+    .love-rating-container {
+        padding: 6px;
+        border-radius: 10px;
+        justify-content: center;
+    }
+
+    .heart-button {
+        font-size: 24px;
+    }
+
+    .love-counter {
+        gap: 1px;
+    }
+
+    .love-number {
+        font-size: 14px;
+    }
+
+    .love-label {
+        font-size: 9px;
+    }
+
+    .add-button {
+        height: 44px;
+        font-size: 14px;
+        border-radius: 12px;
+        padding: 0 24px;
+    }
+
+    .stats-section {
+        padding: 24px;
+        overflow-x: scroll;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .stat-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .stat-number {
+        font-size: 32px;
+        margin-bottom: 6px;
+    }
+
+    .stat-country {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    .stat-label {
+        font-size: 12px;
+    }
+
+    .trips-header {
+        margin-bottom: 8px;
+        padding: 0 2px;
+    }
+
+    .trips-title {
+        font-size: 12px;
+    }
+
+    .scroll-indicator {
+        gap: 3px;
+        font-size: 10px;
+    }
+
+    .scroll-text {
+        font-size: 9px;
+    }
+
+    .empty-state {
+        padding: 20px 10px;
+        min-height: 120px;
+    }
+
+    .empty-text {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+
+    .empty-subtext {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app {
+        padding: 12px;
+    }
+
+    .fancy-title-container {
+        margin-bottom: 20px;
+    }
+
+    .fancy-title {
+        font-size: clamp(1.8rem, 7vw, 2.5rem);
+        padding: 10px 0;
+    }
+
+    .sparkle {
+        font-size: 1.2em;
+    }
+
+    .sparkle-1 {
+        left: -30px;
+        top: 0px;
+    }
+
+    .sparkle-2 {
+        right: -30px;
+        top: 0px;
+    }
+
+    .container {
+        gap: 12px;
+    }
+
+    .map-container {
+        height: 40vh;
+    }
+
+    .countries-sidebar {
+        padding: 20px;
+        max-height: 120vh;
+    }
+
+    .sidebar-title {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .play-button,
+    .export-button {
+        padding: 10px 14px;
+        font-size: 11px;
+        border-radius: 10px;
+    }
+
+    .countries-list {
+        max-height: 25vh;
+        gap: 6px;
+    }
+
+    .country-card {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .country-flag {
+        width: 24px;
+        height: 18px;
+    }
+
+    .visit-country {
+        font-size: 11px;
+    }
+
+    .visit-date {
+        font-size: 9px;
+    }
+
+    .input-section {
+        padding: 20px;
+    }
+
+    .input-row {
+        gap: 12px;
+    }
+
+    .love-rating-container {
+        gap: 6px;
+    }
+
+    .heart-button {
+        font-size: 14px;
+    }
+
+    .love-number {
+        font-size: 11px;
+    }
+
+    .love-label {
+        font-size: 9px;
+    }
+
+    .stats-section {
+        padding: 20px;
+    }
+
+    .stat-card {
+        padding: 12px;
+    }
+
+    .stat-number {
+        font-size: 18px;
+    }
+
+    .stat-country {
+        font-size: 11px;
+    }
 }
 
 .countries-list::after {
@@ -624,10 +944,20 @@ body {
     }
 }
 
+.stats-section {
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5e7eb;
+}
+
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
 }
 
 .stat-card {
@@ -830,10 +1160,11 @@ body {
 }
 
 .buttons-section {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
     display: flex;
-    gap: 12px;
+    gap: 16px;
     flex-shrink: 0;
+    padding: 0 4px;
 }
 
 .play-button {
@@ -931,8 +1262,10 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 60px 20px;
     text-align: center;
+    color: #6b7280;
+    flex: 1;
     min-height: 200px;
 }
 
@@ -945,8 +1278,8 @@ body {
 .empty-text {
     font-size: 20px;
     font-weight: 600;
-    color: #9ca3af;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    color: #4b5563;
 }
 
 .empty-subtext {

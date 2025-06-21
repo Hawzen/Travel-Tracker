@@ -468,7 +468,6 @@ const App: React.FC = () => {
     const emojiArray = isHeartEmoji ? heartEmojis : sparkleEmojis;
     return emojiArray[Math.floor(Math.random() * emojiArray.length)];
   };
-
   const handleHeartClick = useCallback(() => {
     const now = Date.now();
     // Performance: throttle rapid clicks
@@ -480,21 +479,29 @@ const App: React.FC = () => {
       setIsHeartAnimating(true);
       setTimeout(() => setIsHeartAnimating(false), 300);
 
-      // Get heart button position
+      // Get heart button position more accurately
       const heartButton = heartButtonRef.current;
       let startX = window.innerWidth * 0.5;
       let startY = window.innerHeight * 0.5;
 
       if (heartButton) {
         const rect = heartButton.getBoundingClientRect();
+        // Use viewport-relative position (no scroll offset needed for fixed overlay)
         startX = rect.left + rect.width / 2;
         startY = rect.top + rect.height / 2;
       }
 
-      // Create flying particles based on love rating (but limit for performance)
-      const baseCount = Math.min(newRating, 8); // Cap at 8 for performance
+      // Create flying particles based on love rating (optimized for performance)
+      const baseCount = Math.min(newRating * 2, 15); // Cap at 15 for performance
       const particleCount = Math.max(baseCount, 1);
-      const newParticles = [];
+      const newParticles: Array<{
+        id: number;
+        emoji: string;
+        x: number;
+        y: number;
+        vx: number;
+        vy: number;
+      }> = [];
 
       for (let i = 0; i < particleCount; i++) {
         const particle = {
@@ -509,17 +516,21 @@ const App: React.FC = () => {
       }
 
       setFlyingParticles((prev) => {
-        // Performance: limit total particles on screen
-        const filteredPrev = prev.slice(-20); // Keep only last 20 particles
+        // Performance: limit total particles on screen for better performance
+        const filteredPrev = prev.slice(-30000);
         return [...filteredPrev, ...newParticles];
       });
 
-      // Remove particles after animation
-      setTimeout(() => {
-        setFlyingParticles((prev) =>
-          prev.filter((p) => !newParticles.some((np) => np.id === p.id)),
-        );
-      }, 3000);
+      // Performance: Remove particles after animation completes (reduced from 3000ms)
+      const removeParticles = () => {
+        setTimeout(() => {
+          setFlyingParticles((prev) =>
+            prev.filter((p) => !newParticles.some((np) => np.id === p.id)),
+          );
+        }, 2500); // Slightly shorter than CSS animation duration
+      };
+
+      removeParticles();
 
       return newRating;
     });
@@ -766,7 +777,7 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Auto-scroll to currently playing country
+  // Auto-scroll to currently playing country within container only
   useEffect(() => {
     if (isPlaying && currentPlayIndex >= 0 && scrollContainerRef.current) {
       const sortedVisits = [...visits].sort(
@@ -775,11 +786,26 @@ const App: React.FC = () => {
       const currentVisit = sortedVisits[currentPlayIndex];
       if (currentVisit && cardRefs.current[currentVisit.countryCode]) {
         const cardElement = cardRefs.current[currentVisit.countryCode];
-        if (cardElement) {
-          cardElement.scrollIntoView({
+        const containerElement = scrollContainerRef.current;
+
+        if (cardElement && containerElement) {
+          // Calculate positions relative to the container
+          const cardRect = cardElement.getBoundingClientRect();
+          const containerRect = containerElement.getBoundingClientRect();
+
+          // Calculate the offset from the top of the container
+          const cardTop =
+            cardRect.top - containerRect.top + containerElement.scrollTop;
+          const cardHeight = cardRect.height;
+          const containerHeight = containerRect.height;
+
+          // Calculate the scroll position to center the card in the container
+          const scrollPosition = cardTop - containerHeight / 2 + cardHeight / 2;
+
+          // Smooth scroll within the container only
+          containerElement.scrollTo({
+            top: scrollPosition,
             behavior: "smooth",
-            block: "center",
-            inline: "nearest",
           });
         }
       }
@@ -851,7 +877,14 @@ const App: React.FC = () => {
   }, [visits]);
 
   const getMapSize = useMemo(() => {
-    return { width: 700, height: 700 };
+    const width = window.innerWidth;
+    if (width <= 480) {
+      return { width: 250, height: 250 };
+    } else if (width <= 768) {
+      return { width: 300, height: 300 };
+    } else {
+      return { width: 685, height: 565 };
+    }
   }, []);
 
   const getPlotlyData = () => {
@@ -918,6 +951,16 @@ const App: React.FC = () => {
         ))}
       </div>
       <div className="container">
+        {/* Fancy Travel Tracker Title */}
+        <div className="fancy-title-container">
+          <h1 className="fancy-title">
+            <span className="sparkle sparkle-1">✨</span>
+            <span className="title-text">Travel Tracker</span>
+            <span className="sparkle sparkle-2">✨</span>
+          </h1>
+          <div className="title-glow"></div>
+        </div>
+
         <div className="main-layout">
           <div className="globe-section">
             <div className="map-container">
