@@ -240,6 +240,47 @@ const coordinates: Record<string, { lon: number; lat: number }> = {
   MCO: { lon: 7, lat: 43 },
   AND: { lon: 1, lat: 42 },
   VAT: { lon: 12, lat: 41 },
+  HKG: { lon: 114, lat: 22 },
+  SGP: { lon: 103, lat: 1 },
+  MAC: { lon: 113, lat: 22 },
+  TWN: { lon: 121, lat: 24 },
+  PRI: { lon: -66, lat: 18 },
+  GUM: { lon: 144, lat: 13 },
+  VIR: { lon: -64, lat: 18 },
+  ASM: { lon: -170, lat: -14 },
+  MNP: { lon: 145, lat: 15 },
+  PYF: { lon: -149, lat: -17 },
+  NCL: { lon: 165, lat: -20 },
+  GLP: { lon: -61, lat: 16 },
+  MTQ: { lon: -61, lat: 14 },
+  REU: { lon: 55, lat: -21 },
+  MYT: { lon: 45, lat: -12 },
+  GUF: { lon: -53, lat: 4 },
+  FRO: { lon: -6, lat: 61 },
+  GIB: { lon: -5, lat: 36 },
+  GRL: { lon: -42, lat: 71 },
+  BMU: { lon: -64, lat: 32 },
+  CYM: { lon: -80, lat: 19 },
+  COK: { lon: -159, lat: -21 },
+  NIU: { lon: -169, lat: -19 },
+  NFK: { lon: 167, lat: -29 },
+  CXR: { lon: 105, lat: -10 },
+  CCK: { lon: 96, lat: -12 },
+  ANT: { lon: -61, lat: 17 },
+  ABW: { lon: -69, lat: 12 },
+  CUW: { lon: -68, lat: 12 },
+  SXM: { lon: -63, lat: 18 },
+  BES: { lon: -68, lat: 12 },
+  TCA: { lon: -71, lat: 21 },
+  VGB: { lon: -64, lat: 18 },
+  AIA: { lon: -63, lat: 18 },
+  MSR: { lon: -62, lat: 16 },
+  SHN: { lon: -5, lat: -15 },
+  FLK: { lon: -58, lat: -51 },
+  SGS: { lon: -36, lat: -54 },
+  IOT: { lon: 72, lat: -6 },
+  HMD: { lon: 73, lat: -53 },
+  ATA: { lon: 0, lat: -90 },
 };
 
 const App: React.FC = () => {
@@ -308,22 +349,13 @@ const App: React.FC = () => {
       console.log("Error saving to localStorage:", error);
     }
   }, []);
-
   const generateColorByLove = (rating: number): string => {
-    if (rating === 0) return "#ef4444"; // Red for no love
-    if (rating <= 5) {
-      // Gradient from red to green (0-5)
-      const intensity = rating / 5;
+    if (rating <= 10) {
+      // Smooth gradient from red to green (0-10)
+      const intensity = rating / 10;
       const red = Math.round(239 * (1 - intensity) + 34 * intensity);
       const green = Math.round(68 * (1 - intensity) + 197 * intensity);
       const blue = Math.round(68 * (1 - intensity) + 94 * intensity);
-      return `rgb(${red}, ${green}, ${blue})`;
-    } else if (rating <= 10) {
-      // Gradient from green to gold (5-10)
-      const intensity = (rating - 5) / 5;
-      const red = Math.round(34 * (1 - intensity) + 251 * intensity);
-      const green = Math.round(197 * (1 - intensity) + 191 * intensity);
-      const blue = Math.round(94 * (1 - intensity) + 36 * intensity);
       return `rgb(${red}, ${green}, ${blue})`;
     } else {
       // Infinity love - rainbow/magical color
